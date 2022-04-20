@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <meta charset="utf-8" />
@@ -80,13 +81,14 @@
                 <form action="" onsubmit="onsubmitButton_Send(); return false;">
                     Message : <input type="text" id="input_message" autocomplete="off" autofocus /><input type="submit" value="Send" />
                 </form>
+                <button id="connect">Connect</button>
 
                 <ul id="list_message"></ul>
 
             </div>
         </div>
     </div>
-
+    <script src="{% static 'js/javascript.js' %}"></script>
     <script>
         const g_elementDivJoinScreen = document.getElementById( "div_join_screen" );
         const g_elementDivChatScreen = document.getElementById( "div_chat_screen" );
@@ -98,6 +100,18 @@
 
         const g_elementInputMessage = document.getElementById( "input_message" );
         const g_elementListMessage = document.getElementById( "list_message" );
+
+        //UFO
+        /*const SA_SERVICE_UUID='40ee1111-63ec-4b7f-8ce7-712efd55b90e';
+        const SA_CHARACTERISTIC_UUID='40ee2222-63ec-4b7f-8ce7-712efd55b90e';
+        const device=await navigator.bluetooth.requestDevice({
+            filters:[
+                {services:[SA_SERVICE_UUID]}
+            ]
+        });
+        //const server=await device.gatt.connect();
+        const service=await server.getPrimaryService(SA_SERVICE_UUID);
+        const characteristic=await service.getCharacteristic(SA_CHARACTERISTIC_UUID);*/
 
         // WebSocketオブジェクト
         let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
