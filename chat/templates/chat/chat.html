@@ -3,8 +3,9 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Chat</title>
-
+    <script src="{% static 'js/main.js' %}"defer></script>
     <style type="text/css">
         input:read-only, textarea:read-only {
             background-color: #CCC;
@@ -55,7 +56,7 @@
     <div id="div_container">
 
         <div id="div_header">
-            <h1>My Chat</h1>
+            <h1 id="room_name">SA Chat</h1>
         </div>
 
         <div id="div_main">
@@ -73,7 +74,6 @@
             </div>
 
             <div id="div_chat_screen">
-                <button onclick="onclickButton_LeaveChat()">Leave Chat.</button><br />
                 User name : <input type="text" id="text_username" readonly="readonly"><br />
                 Room Name : <input type="text" id="text_roomname" readonly="readonly"><br />
                 <!-- エンターキーによるボタン押下を行うために、<button>ではなく<form>と<input type="submit">を使用。
@@ -81,132 +81,21 @@
                 <form action="" onsubmit="onsubmitButton_Send(); return false;">
                     Message : <input type="text" id="input_message" autocomplete="off" autofocus /><input type="submit" value="Send" />
                 </form>
-                <button id="connect">Connect</button>
+                <button id="connect">Connect</button><button onclick="onclickButton_LeaveChat()">Leave Chat.</button><br />
+                <h1 id="deviceName"></h1>
+                <h2 id="speed_metor">0</h2>
+                
+                <div id="controller" >
+                    <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span></label>
+                    <input oninput="onSeek_bar();" type="range" id="speed" min="0" max="100" value="0">
+                </div>
 
                 <ul id="list_message"></ul>
 
             </div>
         </div>
     </div>
-    <script src="{% static 'js/javascript.js' %}"></script>
-    <script>
-        const g_elementDivJoinScreen = document.getElementById( "div_join_screen" );
-        const g_elementDivChatScreen = document.getElementById( "div_chat_screen" );
-        const g_elementInputUserName = document.getElementById( "input_username" );
-        const g_elementInputRoomName = document.getElementById( "input_roomname" );
-
-        const g_elementTextUserName = document.getElementById( "text_username" );
-        const g_elementTextRoomName = document.getElementById( "text_roomname" );
-
-        const g_elementInputMessage = document.getElementById( "input_message" );
-        const g_elementListMessage = document.getElementById( "list_message" );
-
-        //UFO
-        /*const SA_SERVICE_UUID='40ee1111-63ec-4b7f-8ce7-712efd55b90e';
-        const SA_CHARACTERISTIC_UUID='40ee2222-63ec-4b7f-8ce7-712efd55b90e';
-        const device=await navigator.bluetooth.requestDevice({
-            filters:[
-                {services:[SA_SERVICE_UUID]}
-            ]
-        });
-        //const server=await device.gatt.connect();
-        const service=await server.getPrimaryService(SA_SERVICE_UUID);
-        const characteristic=await service.getCharacteristic(SA_CHARACTERISTIC_UUID);*/
-
-        // WebSocketオブジェクト
-        let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-        const g_socket = new WebSocket( ws_scheme + "://" + window.location.host + "/ws/chat/" );
-
-        // 「Join」ボタンを押すと呼ばれる関数
-        function onsubmitButton_JoinChat()
-        {
-            // ユーザー名
-            let strInputUserName = g_elementInputUserName.value;
-            if( !strInputUserName )
-            {
-                return;
-            }
-            g_elementTextUserName.value = strInputUserName;
-
-
-            //room name
-            let strInputRoomName=g_elementInputRoomName.value;
-            g_elementTextRoomName.value=strInputRoomName;
-            // サーバーに"join"を送信
-            g_socket.send( JSON.stringify( { "data_type": "join", "username": strInputUserName,'roomname':strInputRoomName } ) );
-
-            // 画面の切り替え
-            g_elementDivJoinScreen.style.display = "none";  // 参加画面の非表示
-            g_elementDivChatScreen.style.display = "block";  // チャット画面の表示
-        }
-
-        // 「Leave Chat.」ボタンを押すと呼ばれる関数
-        function onclickButton_LeaveChat()
-        {
-            // メッセージリストのクリア
-            while( g_elementListMessage.firstChild )
-            {
-                g_elementListMessage.removeChild( g_elementListMessage.firstChild );
-            }
-
-            // ユーザー名
-            g_elementTextUserName.value = "";
-
-            // サーバーに"leave"を送信
-            g_socket.send( JSON.stringify( { "data_type": "leave" } ) );
-
-            // 画面の切り替え
-            g_elementDivChatScreen.style.display = "none";  // チャット画面の非表示
-            g_elementDivJoinScreen.style.display = "flex";  // 参加画面の表示
-        }
-
-        // 「Send」ボタンを押したときの処理
-        function onsubmitButton_Send()
-        {
-            // 送信用テキストHTML要素からメッセージ文字列の取得
-            let strMessage = g_elementInputMessage.value;
-            if( !strMessage )
-            {
-                return;
-            }
-
-            // WebSocketを通したメッセージの送信
-            g_socket.send( JSON.stringify( { "message": strMessage } ) );
-
-            // 送信用テキストHTML要素の中身のクリア
-            g_elementInputMessage.value = "";
-        }
-
-        // WebSocketからメッセージ受信時の処理
-        g_socket.onmessage = ( event ) =>
-        {
-            // 自身がまだ参加していないときは、無視。
-            if( !g_elementTextUserName.value )
-            {
-                return;
-            }
-
-            // テキストデータをJSONデータにデコード
-            let data = JSON.parse( event.data );
-
-            // メッセージの整形
-            //let strMessage = data["message"];
-            let strMessage = data["datetime"] + " - [" + data["username"] + "] " + data["message"];
-
-            // 拡散されたメッセージをメッセージリストに追加
-            let elementLi = document.createElement( "li" );
-            elementLi.textContent = strMessage;
-            g_elementListMessage.prepend( elementLi ); // リストの一番上に追加
-            //g_elementListMessage.append( elementLi );    // リストの一番下に追加
-        };
-
-        // WebSocketクローズ時の処理
-        g_socket.onclose = ( event ) =>
-        {
-            // ウェブページを閉じたとき以外のWebSocketクローズは想定外
-            console.error( "Unexpected : Chat socket closed." );
-        };
-    </script>
+    <script src="{% static 'js/javascript.js' %}"defer></script>
 </body>
 
 </html>

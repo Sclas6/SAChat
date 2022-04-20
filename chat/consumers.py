@@ -12,6 +12,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         super().__init__(*args,**kwargs)
         self.strGroupName=''
         self.strUserName=''
+        self.speed=0
+        self.direction=0
 
     async def connect(self):
         #self.strGroupName='chat'
@@ -30,13 +32,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.join_chat(strRoomName)
         elif('leave'==text_data_json.get('data_type')):
             await self.leave_chat()
+        elif('seek'==text_data_json.get('data_type')):
+            self.speed=text_data_json['sa_speed']
+            self.direction=text_data_json['sa_direction']
+            data={
+                'type':'sa_status',
+                'username':self.strUserName,
+                'datetime': datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+                'sa_speed':self.speed,
+                'sa_direction':self.direction,
+            }
+            await self.channel_layer.group_send(self.strGroupName,data)
         else:
             strMessage=text_data_json['message']
+            self.speed=text_data_json['sa_speed']
+            self.direction=text_data_json['sa_direction']
             data={
                 'type':'chat_message',
                 'message':strMessage,
                 'username':self.strUserName,
-                'datetime': datetime.datetime.now().strftime('%Y/%m/%d %H:%M:&S'),
+                'datetime': datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+                'sa_speed':self.speed,
+                'sa_direction':self.direction,
             }
             await self.channel_layer.group_send(self.strGroupName,data)
 
@@ -45,6 +62,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message':data['message'],
             'username':data['username'],
             'datetime':data['datetime'],
+            'sa_speed':data['sa_speed'],
+        }
+        await self.send(text_data=json.dumps(data_json))
+
+    async def sa_status(self,data):
+        data_json={
+            'username':data['username'],
+            'datetime':data['datetime'],
+            'sa_speed':data['sa_speed'],
+            'sa_direction':data['sa_direction']
         }
         await self.send(text_data=json.dumps(data_json))
 
