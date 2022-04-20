@@ -141,7 +141,7 @@ ASGI_APPLICATION='mysite.asgi.application'
 CHANNEL_LAYERS={
     'default':{
         'BACKEND':'channels_redis.core.RedisChannelLayer',
-        'CONFIG':{'hosts':[os.environ.get('REDIS_URL','redis://:p8ad459f7c9a8fbbc6eaa747e376c68d5f94252be1c4599de46e0d632a594e26f@ec2-52-86-202-105.compute-1.amazonaws.com:6730')],},
+        'CONFIG':{'hosts':[os.environ.get('REDIS_URL','redis://localhost:6379')],},
     },
 }
 
