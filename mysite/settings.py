@@ -138,10 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Channels
 ASGI_APPLICATION='mysite.asgi.application'
-CHANNEL_LAYERS={
-    'default':{
-        'BACKEND':'channels_redis.core.RedisChannelLayer',
-        'CONFIG':{'hosts':[os.environ.get('REDIS_URL','redis://localhost:6379')],},
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': { 'hosts': [('127.0.0.1', 6379)], },
     },
 }
 
@@ -154,6 +154,12 @@ except ImportError:
 
 if not DEBUG:
     SECRET_KEY=os.environ['SECRET_KEY']
+    CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels_redis.core.RedisChannelLayer',
+        'CONFIG':{'hosts':[os.environ.get('REDIS_URL','redis://localhost:6379')],},
+    },
+}
     import django_heroku
     django_heroku.settings(locals())
 
