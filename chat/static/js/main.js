@@ -197,10 +197,11 @@
       let direction=(inputDirection.checked)?1:0;
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
   }
-  async function updata_html(d){
-      inputSpeed.value=d['sa_speed'];
-      inputDirection.checked=(d['sa_direction']==0)?false:true;
-      speed_metor.textContent=d['sa_speed'];
+
+  async function update_html(d){
+    inputSpeed.value=d['sa_speed'];
+    inputDirection.checked=(d['sa_direction']==0)?false:true;
+    speed_metor.textContent=d['sa_speed'];
   }
 
   // WebSocketからメッセージ受信時の処理
@@ -227,7 +228,7 @@
  // リストの一番上に追加
       //g_elementListMessage.append( elementLi );    // リストの一番下に追加
 
-      await updata_html(data);
+      update_html(data);
 
       //inputDirection.value=1;
       onInputSpeed();
