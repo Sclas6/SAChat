@@ -207,7 +207,6 @@
   var pressed=false;
   
   window.onload=function(){
-    let direction=(inputDirection.checked)?1:0;
     sensor.addEventListener("mousemove",function(e){
       imgbutton.onmousedown=function(){
         pressed=true;
@@ -234,6 +233,7 @@
       const r = 10000-((x**2)+(y**2));
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
       let speed=0;
+      let direction=(inputDirection.checked)?1:0;
 
       if(pressed==true&&x**2+y**2<100**2){
         speed=100*par_speed
@@ -243,6 +243,7 @@
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
       inputSpeed.value=speed;
       speed_metor.textContent=speed;
+      inputDirection.checked=direction;
     });
 
     imgbutton.addEventListener("touchmove",function(e){
@@ -259,6 +260,7 @@
       const r = 10000-((x**2)+(y**2));
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
       let speed=100*par_speed;
+      let direction=(inputDirection.checked)?1:0;
       if(pressed==true&&x**2+y**2<100**2){
         speed=100*par_speed
       }else{
@@ -273,6 +275,7 @@
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       inputSpeed.value=0;
       speed_metor.textContent=0;
+      inputDirection.checked=direction;
     });
 
     sensor.addEventListener("pointerdown",function(e){
@@ -286,6 +289,7 @@
       const r = 10000-((x**2)+(y**2));
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
       let speed=0;
+      let direction=(inputDirection.checked)?1:0;
       if(x**2+y**2<100**2){
         speed=100*par_speed
       }else{
@@ -294,6 +298,7 @@
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
       inputSpeed.value=speed;
       speed_metor.textContent=speed;
+      inputDirection.checked=direction;
     });
   }
 
