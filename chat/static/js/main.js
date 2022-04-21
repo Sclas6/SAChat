@@ -214,10 +214,13 @@
 
       imgbutton.onmouseup=function(){
         pressed=false;
+        inputSpeed.value=0;
+        speed_metor.textContent=0;
         g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       }
-      imgbutton.onmouseleave=function(){
-        pressed=false;
+      sensor.onmouseleave=function(){
+        inputSpeed.value=0;
+        speed_metor.textContent=0;
         g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       }
       var mX=e.clientX;
@@ -247,7 +250,7 @@
       var mY=e.touches[0].clientY;
       //sensor.value=mX;
       //sensor.value=mY;
-      const clientRect=this.getBoundingClientRect();
+      const clientRect=sensor.getBoundingClientRect();
       var positionX=clientRect.left+window.pageXOffset;
       var posirionY=clientRect.top+window.pageYOffset;
       var x=mX-positionX-100;
@@ -264,9 +267,33 @@
       inputSpeed.value=speed;
       speed_metor.textContent=speed;
     },{passive:true});
-    
 
-    
+    imgbutton.addEventListener("touchend", () => {
+      g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+      inputSpeed.value=0;
+      speed_metor.textContent=0;
+    });
+
+    sensor.addEventListener("pointerdown",function(e){
+      var mX=e.clientX;
+      var mY=e.clientY;
+      const clientRect=this.getBoundingClientRect();
+      var positionX=clientRect.left+window.pageXOffset;
+      var posirionY=clientRect.top+window.pageYOffset;
+      var x=mX-positionX-100;
+      var y=mY-posirionY-100;
+      const r = 10000-((x**2)+(y**2));
+      const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
+      let speed=0;
+      if(x**2+y**2<100**2){
+        speed=100*par_speed
+      }else{
+        speed=0;
+      }
+      g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      inputSpeed.value=speed;
+      speed_metor.textContent=speed;
+    });
   }
 
 
