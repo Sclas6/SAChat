@@ -208,17 +208,17 @@
   
   window.onload=function(){
     sensor.addEventListener("mousemove",function(e){
-      imgbutton.onpointerdown=function(){
+      imgbutton.onmousedown=function(){
         pressed=true;
       }
 
-      imgbutton.onpointerup=function(){
+      imgbutton.onmouseup=function(){
         pressed=false;
-        g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
+        //g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
       }
       imgbutton.onmouseleave=function(){
         pressed=false;
-        g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
+        //g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
       }
       var mX=e.clientX;
       if(!e.clientX)e = event.changedTouches[0].clientX;
@@ -237,8 +237,34 @@
       if(pressed==true&&x**2+y**2<100**2){
         //g_socket.send(JSON.stringify({"message": par_speed,"sa_speed":speed,"sa_direction":direction}));
         g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      }else{
+        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       }
     });
+
+    imgbutton.addEventListener("touchmove",function(e){
+      pressed=true;
+      var mX=e.touches[0].clientX;
+      var mY=e.touches[0].clientY;
+      //sensor.value=mX;
+      //sensor.value=mY;
+      const clientRect=this.getBoundingClientRect();
+      var positionX=clientRect.left+window.pageXOffset;
+      var posirionY=clientRect.top+window.pageYOffset;
+      var x=mX-positionX-100;
+      var y=mY-posirionY-100;
+      const r = 10000-((x**2)+(y**2));
+      const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
+      let speed=100*par_speed;
+      if(pressed==true&&x**2+y**2<100**2){
+        //g_socket.send(JSON.stringify({"message": par_speed,"sa_speed":speed,"sa_direction":direction}));
+        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      }else{
+        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+      }
+    },{passive:true});
+    
+
     
   }
 
