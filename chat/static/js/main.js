@@ -275,7 +275,6 @@
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       inputSpeed.value=0;
       speed_metor.textContent=0;
-      inputDirection.checked=direction;
     });
 
     sensor.addEventListener("pointerdown",function(e){
