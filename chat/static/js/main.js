@@ -302,8 +302,9 @@
  // リストの一番上に追加
       //g_elementListMessage.append( elementLi );    // リストの一番下に追加
 
-      update_html(data);
-
+      if(g_elementTextUserName.value!=data["username"]){
+        update_html(data);
+      }
       //inputDirection.value=1;
       onInputSpeed();
       
