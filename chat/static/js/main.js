@@ -207,22 +207,23 @@
   var pressed=false;
   
   window.onload=function(){
-    sensor.addEventListener("pointermove",function(e){
+    sensor.addEventListener("mousemove",function(e){
       imgbutton.onpointerdown=function(){
         pressed=true;
       }
+
       imgbutton.onpointerup=function(){
         pressed=false;
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+        g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
       }
       imgbutton.onmouseleave=function(){
         pressed=false;
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+        g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
       }
       var mX=e.clientX;
-      if(!e.clientX)e = event.touches[0];
+      if(!e.clientX)e = event.changedTouches[0].clientX;
       var mY=e.clientY;
-      if(!e.clientX)e = event.touches[0];
+      if(!e.clientY)e = event.changedTouches[0].clientY;
       //sensor.value=mX;
       //sensor.value=mY;
       const clientRect=this.getBoundingClientRect();
@@ -238,6 +239,7 @@
         g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
       }
     });
+    
   }
 
 
