@@ -214,18 +214,14 @@
 
       imgbutton.onmouseup=function(){
         pressed=false;
-        //g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
+        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       }
       imgbutton.onmouseleave=function(){
         pressed=false;
-        //g_socket.send(JSON.stringify({"message":"seek","sa_speed":0,"sa_direction":direction}));
+        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       }
       var mX=e.clientX;
-      if(!e.clientX)e = event.changedTouches[0].clientX;
       var mY=e.clientY;
-      if(!e.clientY)e = event.changedTouches[0].clientY;
-      //sensor.value=mX;
-      //sensor.value=mY;
       const clientRect=this.getBoundingClientRect();
       var positionX=clientRect.left+window.pageXOffset;
       var posirionY=clientRect.top+window.pageYOffset;
@@ -233,15 +229,16 @@
       var y=mY-posirionY-100;
       const r = 10000-((x**2)+(y**2));
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
-      let speed=100*par_speed;
+      let speed=0;
+
       if(pressed==true&&x**2+y**2<100**2){
-        inputSpeed.value=speed;
-        speed_metor.textContent=speed;
-        //g_socket.send(JSON.stringify({"message": par_speed,"sa_speed":speed,"sa_direction":direction}));
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+        speed=100*par_speed
       }else{
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+        speed=0;
       }
+      g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      inputSpeed.value=speed;
+      speed_metor.textContent=speed;
     });
 
     imgbutton.addEventListener("touchmove",function(e){
@@ -259,11 +256,13 @@
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
       let speed=100*par_speed;
       if(pressed==true&&x**2+y**2<100**2){
-        //g_socket.send(JSON.stringify({"message": par_speed,"sa_speed":speed,"sa_direction":direction}));
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+        speed=100*par_speed
       }else{
-        g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
+        speed=0;
       }
+      g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      inputSpeed.value=speed;
+      speed_metor.textContent=speed;
     },{passive:true});
     
 
