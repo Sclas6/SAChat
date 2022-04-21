@@ -272,6 +272,7 @@
     },{passive:true});
 
     imgbutton.addEventListener("touchend", () => {
+      let direction=(inputDirection.checked)?1:0;
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":0,"sa_direction":direction}));
       inputSpeed.value=0;
       speed_metor.textContent=0;
