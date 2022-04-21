@@ -207,6 +207,7 @@
   var pressed=false;
   
   window.onload=function(){
+    let direction=(inputDirection.checked)?1:0;
     sensor.addEventListener("mousemove",function(e){
       imgbutton.onmousedown=function(){
         pressed=true;
