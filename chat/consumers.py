@@ -63,6 +63,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'username':data['username'],
             'datetime':data['datetime'],
             'sa_speed':data['sa_speed'],
+            'sa_direction':data['sa_direction']
         }
         await self.send(text_data=json.dumps(data_json))
 

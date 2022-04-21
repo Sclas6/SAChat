@@ -28,15 +28,18 @@
             display: flex; /* 子要素をflex配置とする */
             flex-direction: column; /* 子要素のflex配置の方向は列方向（縦方向）*/
         }
+        #speed_metor{
+            margin-left: 10%;
+            font-size: x-large;
+        }
 
         #speed{
-            margin-top:10%;
-            width: 50%;
-            -webkit-transform:rotate(270deg);
+            margin-top:5%;
+            width: 100%;
+            /*-webkit-transform:rotate(270deg);
             -moz-transform:rotate(270deg);
             -o-transform:rotate(270deg);
-            transform:rotate(270deg);
-            margin-left: auto;
+            transform:rotate(270deg);*/
         }
 
         #div_header {
@@ -93,10 +96,10 @@
                 </form>
                 <button id="connect">Connect</button><button onclick="onclickButton_LeaveChat()">Leave Chat.</button><br />
                 <h1 id="deviceName"></h1>
-                <h2 id="speed_metor">0</h2>
+                
                 
                 <div id="controller" >
-                    <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span></label>
+                    <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span><span id="speed_metor">0</span></label>
                     <input oninput="onSeek_bar();" type="range" id="speed" min="0" max="100" value="0">
                 </div>
 
