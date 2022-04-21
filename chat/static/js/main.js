@@ -234,9 +234,9 @@
       const r = 10000-((x**2)+(y**2));
       const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
       let speed=100*par_speed;
-      inputSpeed.value=speed;
-      speed_metor.textContent=speed;
       if(pressed==true&&x**2+y**2<100**2){
+        inputSpeed.value=speed;
+        speed_metor.textContent=speed;
         //g_socket.send(JSON.stringify({"message": par_speed,"sa_speed":speed,"sa_direction":direction}));
         g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
       }else{
@@ -296,6 +296,7 @@
         let elementLi = document.createElement( "li" );
         elementLi.textContent = strMessage;
         g_elementListMessage.prepend( elementLi );
+        
       }
       // 拡散されたメッセージをメッセージリストに追加
  // リストの一番上に追加
