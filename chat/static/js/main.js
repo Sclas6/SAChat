@@ -115,7 +115,7 @@
   const g_elementInputUserName = document.getElementById( "input_username" );
   const g_elementInputRoomName = document.getElementById( "input_roomname" );
   const g_elementTextUserName = document.getElementById( "text_username" );
-  const g_elementTextRoomName = document.getElementById( "text_roomname" );
+  //const g_elementTextRoomName = document.getElementById( "text_roomname" );
   const g_elementInputMessage = document.getElementById( "input_message" );
   //const g_elementInputSastatus = document.getElementById("input_message");
   const g_elementListMessage = document.getElementById( "list_message" );
@@ -151,7 +151,7 @@
       g_elementTextUserName.value = strInputUserName;
       //room name
       let strInputRoomName=g_elementInputRoomName.value;
-      g_elementTextRoomName.value=strInputRoomName;
+      //g_elementTextRoomName.value=strInputRoomName;
       room_name.textContent=strInputRoomName;
       // サーバーに"join"を送信
       g_socket.send( JSON.stringify( { "data_type": "join", "username": strInputUserName,'roomname':strInputRoomName} ) );
@@ -196,6 +196,9 @@
       let speed=inputSpeed.value;
       let direction=(inputDirection.checked)?1:0;
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
+      inputSpeed.value=speed;
+      speed_metor.textContent=speed;
+      inputDirection.checked=direction;
   }
 /*
   async function sensor(){
@@ -269,6 +272,7 @@
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
       inputSpeed.value=speed;
       speed_metor.textContent=speed;
+      inputDirection.checked=direction;
     },{passive:true});
 
     imgbutton.addEventListener("touchend", () => {
@@ -313,7 +317,7 @@
   g_socket.onmessage = ( event ) =>
   {
       // 自身がまだ参加していないときは、無視。
-      if( !g_elementTextUserName.value )
+      if( !g_elementInputUserName.value )
       {
           return;
       }
@@ -328,13 +332,14 @@
         let elementLi = document.createElement( "li" );
         elementLi.textContent = strMessage;
         g_elementListMessage.prepend( elementLi );
-        
       }
-      // 拡散されたメッセージをメッセージリストに追加
- // リストの一番上に追加
-      //g_elementListMessage.append( elementLi );    // リストの一番下に追加
 
-      if(g_elementTextUserName.value!=data["username"]){
+      if(g_elementInputUserName.value!=data["username"]){
+        if(data["username"]!="!leave!"){
+          g_elementTextUserName.value=g_elementInputUserName.value+", "+data["username"];
+        }else{
+          g_elementTextUserName.value=g_elementInputUserName.value;
+        }
         update_html(data);
       }
       //inputDirection.value=1;

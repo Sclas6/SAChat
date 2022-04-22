@@ -1,15 +1,22 @@
 import imp
 import json
+from xml.dom.minidom import CharacterData
 #from channels.generic.websocket import WebsocketConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 import datetime
 
 #from asgiref.sync import async_to_sync
 
+USERNAME_SYSTEM="*system*"
+
 class ChatConsumer(AsyncWebsocketConsumer):
+
+    rooms=None
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        if ChatConsumer.rooms is None:
+            ChatConsumer.rooms = {}
         self.strGroupName=''
         self.strUserName=''
         self.speed=0
@@ -80,9 +87,40 @@ class ChatConsumer(AsyncWebsocketConsumer):
         #self.strGroupName='chat'
         self.strGroupName='chat_%s'% strRoomName
         await self.channel_layer.group_add(self.strGroupName,self.channel_name)
+        room=ChatConsumer.rooms.get(self.strGroupName)
+        if(None==room):
+            ChatConsumer.rooms[self.strGroupName]={'participants_count':1}
+        else:
+            room['participants_count']+=1
+        # グループ内の全コンシューマーにメッセージ拡散送信（受信関数を'type'で指定）
+        data = {
+            'type': 'sa_status', # 受信処理関数名
+            'username': self.strUserName, # ユーザー名
+            'datetime': datetime.datetime.now().strftime( '%Y/%m/%d %H:%M:%S' ), # 現在時刻
+            'sa_speed':self.speed,
+            'sa_direction':self.direction,
+        }
+        await self.channel_layer.group_send( self.strGroupName, data )
 
     async def leave_chat(self):
         if(''==self.strGroupName):
             return
         await self.channel_layer.group_discard(self.strGroupName,self.channel_name)
-        self.strGroupName=''
+        ChatConsumer.rooms[self.strGroupName]['participants_count'] -= 1
+        # システムメッセージの作成
+        # グループ内の全コンシューマーにメッセージ拡散送信（受信関数を'type'で指定）
+        data = {
+            'type': 'sa_status', # 受信処理関数名
+            'username': "!leave!", # ユーザー名
+            'datetime': datetime.datetime.now().strftime( '%Y/%m/%d %H:%M:%S' ), # 現在時刻
+            'sa_speed':self.speed,
+            'sa_direction':self.direction,
+        }
+        await self.channel_layer.group_send( self.strGroupName, data )
+
+        # 参加者がゼロのときは、ルーム管理からルームの削除
+        if( 0 == ChatConsumer.rooms[self.strGroupName]['participants_count'] ):
+            del ChatConsumer.rooms[self.strGroupName]
+
+        # ルーム名を空に
+        self.strGroupName = ''

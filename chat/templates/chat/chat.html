@@ -107,14 +107,13 @@
             </div>
 
             <div id="div_chat_screen">
-                User name : <input type="text" id="text_username" readonly="readonly"><br />
-                Room Name : <input type="text" id="text_roomname" readonly="readonly"><br />
+                Users : <input type="text" id="text_username" readonly="readonly"><br />
                 <!-- エンターキーによるボタン押下を行うために、<button>ではなく<form>と<input type="submit">を使用。
                 ボタン押下(=submit)時にページリロードが行われないように、onsubmitの設定の最後に"return false;"を追加。-->
                 <form action="" onsubmit="onsubmitButton_Send(); return false;">
                     Message : <input type="text" id="input_message" autocomplete="off" autofocus /><input type="submit" value="Send" />
                 </form>
-                <button id="connect">Connect</button><button onclick="onclickButton_LeaveChat()">Leave Chat.</button><br />
+                <button id="connect">Connect SA</button><button onclick="onclickButton_LeaveChat()">Leave Chat.</button><br />
                 <h1 id="deviceName"></h1>
                 
                 
