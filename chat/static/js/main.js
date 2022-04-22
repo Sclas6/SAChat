@@ -231,15 +231,15 @@
       const clientRect=this.getBoundingClientRect();
       var positionX=clientRect.left+window.pageXOffset;
       var posirionY=clientRect.top+window.pageYOffset;
-      var x=mX-positionX-100;
-      var y=mY-posirionY-100;
-      const r = 10000-((x**2)+(y**2));
-      const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
+      var x=mX-positionX-150;
+      var y=mY-posirionY-150;
+      const r = (150**2)-((x**2)+(y**2));
+      const par_speed=r<3500?0.2:r<7000?0.25:r<11000?0.3:r<12000?0.35:r<13000?0.4:r<14000?0.45:r<15000?0.5:r<15000?0.525:r<16000?0.55:r<17000?0.575:r<18000?0.6:r<21000?0.8:1;
       let speed=0;
       let direction=(inputDirection.checked)?1:0;
 
-      if(pressed==true&&x**2+y**2<100**2){
-        speed=100*par_speed
+      if(pressed==true&&x**2+y**2<150**2){
+        speed=parseInt(100*par_speed);
       }else{
         speed=0;
       }
@@ -258,14 +258,14 @@
       const clientRect=sensor.getBoundingClientRect();
       var positionX=clientRect.left+window.pageXOffset;
       var posirionY=clientRect.top+window.pageYOffset;
-      var x=mX-positionX-100;
-      var y=mY-posirionY-100;
-      const r = 10000-((x**2)+(y**2));
-      const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
+      var x=mX-positionX-150;
+      var y=mY-posirionY-150;
+      const r = (150**2)-((x**2)+(y**2));
+      const par_speed=r<3500?0.2:r<7000?0.25:r<11000?0.3:r<12000?0.35:r<13000?0.4:r<14000?0.45:r<15000?0.5:r<15000?0.525:r<16000?0.55:r<17000?0.575:r<18000?0.6:r<21000?0.8:1;
       let speed=100*par_speed;
       let direction=(inputDirection.checked)?1:0;
-      if(pressed==true&&x**2+y**2<100**2){
-        speed=100*par_speed
+      if(pressed==true&&x**2+y**2<150**2){
+        speed=parseInt(100*par_speed);
       }else{
         speed=0;
       }
@@ -288,14 +288,14 @@
       const clientRect=this.getBoundingClientRect();
       var positionX=clientRect.left+window.pageXOffset;
       var posirionY=clientRect.top+window.pageYOffset;
-      var x=mX-positionX-100;
-      var y=mY-posirionY-100;
-      const r = 10000-((x**2)+(y**2));
-      const par_speed=r<1000?0.1:r<2000?0.15:r<3000?0.2:r<4000?0.25:r<5000?0.3:r<6000?0.35:r<7000?0.4:r<8000?0.5:r<9700?0.6:1;
+      var x=mX-positionX-150;
+      var y=mY-posirionY-150;
+      const r = (150**2)-((x**2)+(y**2));
+      const par_speed=r<3500?0.2:r<7000?0.25:r<11000?0.3:r<12000?0.35:r<13000?0.4:r<14000?0.45:r<15000?0.5:r<15000?0.525:r<16000?0.55:r<17000?0.575:r<18000?0.6:r<21000?0.8:1;
       let speed=0;
       let direction=(inputDirection.checked)?1:0;
-      if(x**2+y**2<100**2){
-        speed=100*par_speed
+      if(x**2+y**2<150**2){
+        speed=parseInt(100*par_speed);
       }else{
         speed=0;
       }

@@ -52,7 +52,7 @@
         #sensor{
             margin-left:auto;
             margin-top:25%;
-            margin-bottom: 20vh;
+            margin-bottom: 15vh;
             user-select:none;
             -webkit-user-select:none;
             -ms-user-select: none;
@@ -82,6 +82,12 @@
         #div_chat_screen {
             margin: 0px 8px; /* bodyで「margin: 0」にしたのを戻す（ブラウザ領域境界に余白なしでHTML要素が表示されるのを余白ありに戻す） */
             display: none; /* 初期状態非表示 */
+        }
+        .target a ul li{
+            display: none;
+        }
+        .target a:hover ul li{
+            display: block;
         }
     </style>
 </head>
@@ -120,10 +126,13 @@
                 <div id="controller" >
                     <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span><span id="speed_metor">0</span></label>
                     <input oninput="onSeek_bar();" type="range" id="speed" min="0" max="100" value="0" step="2">
-                    <button type="button" id="imgbutton"><img src="{% static 'media/sensor.png' %}" id="sensor"></button>
+                    <button type="button" id="imgbutton"><img src="{% static 'media/sensor2.png' %}" id="sensor"></button>
                 </div>
-
+                    <div class = "target">
+                        <a>[Chat]: 
                 <ul id="list_message"></ul>
+                        </a>
+                    </div>
 
             </div>
         </div>
