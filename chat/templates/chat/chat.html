@@ -13,6 +13,8 @@
 
         html {
             height:100%; /* 画面全体を使用する場合のお約束 */
+            overscroll-behavior: none;
+            overflow: hidden;
         }
 
         body {
@@ -20,6 +22,19 @@
             padding: 0; /* 画面全体を使用する場合のお約束 */
             min-height: 100%; /* 画面全体を使用する場合のお約束 */
             height: 100%; /* 画面全体を使用する場合のお約束 */
+
+            user-select:none;
+            -webkit-user-select:none;
+            -ms-user-select: none;
+            -moz-user-select:none;
+            -khtml-user-select:none;
+            -webkit-user-drag:none;
+            -khtml-user-drag:none;
+        }
+        img{
+            -webkit-user-drag: none;
+            -moz-user-drag:none;
+            -moz-user-drag:none;
         }
 
         #div_container {
@@ -53,13 +68,6 @@
             margin-left:auto;
             margin-top:40px;
             margin-bottom: 12vh;
-            user-select:none;
-            -webkit-user-select:none;
-            -ms-user-select: none;
-            -moz-user-select:none;
-            -khtml-user-select:none;
-            -webkit-user-drag:none;
-            -khtml-user-drag:none;
         }
 
         #div_header {
@@ -126,7 +134,7 @@
                 <div id="controller" >
                     <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span><span id="speed_metor">0</span></label>
                     <input oninput="onSeek_bar();" type="range" id="speed" min="0" max="100" value="0" step="2">
-                    <button type="button" id="imgbutton"><img src="{% static 'media/sensor2.png' %}" id="sensor"></button>
+                    <button type="button" id="imgbutton"><img src="{% static 'media/sensor2.png' %}" id="sensor" draggable="false"></button>
                 </div>
                     <div class = "target">
                         <a>[Chat]: 

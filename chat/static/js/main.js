@@ -208,6 +208,12 @@
   var sensor = document.getElementById( "sensor" );
   var imgbutton=document.getElementById("imgbutton");
   var pressed=false;
+
+  async function update_html(s,d){
+    inputSpeed.value=s;
+    inputDirection.checked=(d==0)?false:true;
+    speed_metor.textContent=s;
+  }
   
   window.onload=function(){
 
@@ -342,13 +348,6 @@
     });
   }
 
-
-  async function update_html(d){
-    inputSpeed.value=d['sa_speed'];
-    inputDirection.checked=(d['sa_direction']==0)?false:true;
-    speed_metor.textContent=d['sa_speed'];
-  }
-
   // WebSocketからメッセージ受信時の処理
   g_socket.onmessage = ( event ) =>
   {
@@ -376,7 +375,7 @@
         }else{
           g_elementTextUserName.value=g_elementInputUserName.value;
         }
-        update_html(data);
+        update_html(data["sa_speed"],data["sa_direction"]);
       }
       //inputDirection.value=1;
       onInputSpeed();
