@@ -250,11 +250,14 @@
     var speed=0;
     var sX=0;
     var sY=0;
+    var toggle;
     sensor.addEventListener("pointerup",function(e){
+
       count=0;
       mSpeed_sum=0;
     });
     sensor.addEventListener("mousemove",function(e){
+      toggle=document.getElementById("toggle_dir").checked;
       imgbutton.onmousedown=function(){
         pressed=true;
       }
@@ -289,7 +292,7 @@
           mSpeed_avg=parseInt(mSpeed_sum*5/6);
           mSpeed_sum=0;
           count=0;
-          if(r<17000){
+          if(r<17000&&toggle==true){
           if(y<0){
               if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
                 direction=0;
@@ -321,6 +324,7 @@
     });
     var previousTouch;
     imgbutton.addEventListener("touchmove",function(e){
+      toggle=document.getElementById("toggle_dir").checked;
       const touch = e.touches[0];
       if(previousTouch){ 
         e.movementX=touch.clientX-previousTouch.clientX;
@@ -354,7 +358,7 @@
           mSpeed_avg=parseInt(mSpeed_sum*5/6);
           mSpeed_sum=0;
           count=0;
-          if(r<17000){
+          if(r<17000&&toggle==true){
             if(y<0){
                 if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
                   direction=0;

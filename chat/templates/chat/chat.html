@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>My Chat</title>
+    <title>SA Chat</title>
     <script src="{% static 'js/main.js' %}"defer></script>
     <style type="text/css">
         input:read-only, textarea:read-only {
@@ -155,6 +155,8 @@
                     <label>
                         <input onclick="onSeek_bar();" type="checkbox" id="direction">
                         <span>reverse rotation</span>
+                        <input id="toggle_dir" type="checkbox">
+                        <span>toggle</span>
                         <dev class="sm_box">
                             <img src="{% static 'media/sm.png' %}"  id="field"></canvas>
                             <dev class="sm">
