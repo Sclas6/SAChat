@@ -199,6 +199,7 @@
       inputSpeed.value=speed;
       speed_metor.textContent=speed;
       inputDirection.checked=direction;
+      change_speed(speed,direction);
   }
 /*
   async function sensor(){
@@ -214,6 +215,31 @@
     inputDirection.checked=(d==0)?false:true;
     speed_metor.textContent=s;
   }
+  async function change_speed(s,dir){
+    const img=document.getElementById("field");
+    const a = (s==0)?0:(101-s)*50;
+    img.style.animation=(dir==0)?a+"ms linear infinite rotation_r":a+"ms linear infinite rotation_l";
+  }
+  var d=0;
+  var s="rotate(0deg)";
+  async function rotateImg(n,dir){
+    change_speed(0,dir);
+    d=(dir==0)?d+n:d-n;
+    const img=document.getElementById("field");
+    const e="rotate("+d/10+"deg)";
+    img.animate(
+      [
+        {transform:s},
+        {transform:e}
+      ],
+      {
+        duration:1,easing:'linear',iterations:1
+      }
+    );
+    img.style.transform="rotate("+d/50+"deg)";
+    s=e;
+  }
+
   
   window.onload=function(){
 
@@ -222,6 +248,12 @@
     var mSpeed_avg=0;
     var mSpeed=0;
     var speed=0;
+    var sX=0;
+    var sY=0;
+    sensor.addEventListener("pointerup",function(e){
+      count=0;
+      mSpeed_sum=0;
+    });
     sensor.addEventListener("mousemove",function(e){
       imgbutton.onmousedown=function(){
         pressed=true;
@@ -249,25 +281,43 @@
       let direction=(inputDirection.checked)?1:0;
 
       if(pressed==true&&x**2+y**2<150**2){
-        var sX=e.movementX;
-        var sY=e.movementY;
+        sX=e.movementX;
+        sY=e.movementY;
         mSpeed=Math.sqrt(sX**2+sY**2);
         mSpeed_sum=mSpeed+mSpeed_sum;
         if(count%6==0){
           mSpeed_avg=parseInt(mSpeed_sum*5/6);
           mSpeed_sum=0;
-          count==0;
+          count=0;
+          if(r<17000){
+          if(y<0){
+              if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
+                direction=0;
+              }else{
+                direction=1;
+              }
+            }else{
+              if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
+                direction=1;
+              }else{
+                direction=0;
+              }
+            }
+          }
         }
         speed=parseInt(mSpeed_avg*par_speed);
+        speed=(speed>100)?100:speed;
+        rotateImg(speed,direction);
+        count++;
       }else{
         speed=0;
         mSpeed_avg=0;
       }
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
-      inputSpeed.value=speed;
-      speed_metor.textContent=speed;
-      inputDirection.checked=direction;
-      count++;
+
+      update_html(speed,direction);
+      //change_speed(speed);
+      //count++;
     });
     var previousTouch;
     imgbutton.addEventListener("touchmove",function(e){
@@ -303,18 +353,34 @@
         if(count%6==0){
           mSpeed_avg=parseInt(mSpeed_sum*5/6);
           mSpeed_sum=0;
-          count==0;
+          count=0;
+          if(r<17000){
+            if(y<0){
+                if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
+                  direction=0;
+                }else{
+                  direction=1;
+                }
+              }else{
+                if((sX>=0&&sY<0)||(sX>=0&&sY>=0)){
+                  direction=1;
+                }else{
+                  direction=0;
+                }
+              }
+            }
         }
         speed=parseInt(mSpeed_avg*par_speed);
+        speed=(speed>100)?100:speed;
+        rotateImg(speed,direction);
+        count++;
       }else{
         speed=0;
         mSpeed_avg=0;
       }
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
-      inputSpeed.value=speed;
-      speed_metor.textContent=speed;
-      inputDirection.checked=direction;
-      count++;
+      update_html(speed,direction);
+      //count++;
     },{passive:true});
 
     imgbutton.addEventListener("touchend", () => {
@@ -323,6 +389,7 @@
       inputSpeed.value=0;
       speed_metor.textContent=0;
     });
+
 
     sensor.addEventListener("pointerdown",function(e){
       var mX=e.clientX;
@@ -334,17 +401,15 @@
       var y=mY-posirionY-150;
       const r = (150**2)-((x**2)+(y**2));
       const par_speed=r<3500?0.2:r<7000?0.25:r<11000?0.3:r<12000?0.35:r<13000?0.4:r<14000?0.45:r<15000?0.5:r<15000?0.525:r<16000?0.55:r<17000?0.575:r<18000?0.6:r<21000?0.8:1;
-      let speed=0;
       let direction=(inputDirection.checked)?1:0;
       if(x**2+y**2<150**2){
         speed=parseInt(100*par_speed/3);
       }else{
         speed=0;
       }
+      
       g_socket.send(JSON.stringify({"data_type":"seek","sa_speed":speed,"sa_direction":direction}));
-      inputSpeed.value=speed;
-      speed_metor.textContent=speed;
-      inputDirection.checked=direction;
+      update_html(speed,direction);
     });
   }
 
@@ -376,6 +441,7 @@
           g_elementTextUserName.value=g_elementInputUserName.value;
         }
         update_html(data["sa_speed"],data["sa_direction"]);
+        change_speed(data["sa_speed"]);
       }
       //inputDirection.value=1;
       onInputSpeed();

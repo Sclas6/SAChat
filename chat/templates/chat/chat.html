@@ -91,11 +91,31 @@
             margin: 0px 8px; /* bodyで「margin: 0」にしたのを戻す（ブラウザ領域境界に余白なしでHTML要素が表示されるのを余白ありに戻す） */
             display: none; /* 初期状態非表示 */
         }
+        #field{
+            animation:0ms linear infinite rotation_r;
+        }
         .target a ul li{
             display: none;
         }
         .target a:hover ul li{
             display: block;
+        }
+        .sm_box{
+            position: relative;
+        }
+        .sm{
+            position:absolute;
+            top: -33%;
+            left: 47%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes rotation_r{
+            0%{ transform:rotate(0deg); }
+            100%{ transform:rotate(360deg); }
+        }
+        @keyframes rotation_l{
+            0%{ transform:rotate(0deg); }
+            100%{ transform:rotate(-360deg); }
         }
     </style>
 </head>
@@ -132,7 +152,16 @@
                 
                 
                 <div id="controller" >
-                    <label><input onclick="onSeek_bar();" type="checkbox" id="direction"><span>reverse rotation</span><span id="speed_metor">0</span></label>
+                    <label>
+                        <input onclick="onSeek_bar();" type="checkbox" id="direction">
+                        <span>reverse rotation</span>
+                        <dev class="sm_box">
+                            <img src="{% static 'media/sm.png' %}"  id="field"></canvas>
+                            <dev class="sm">
+                                <span id="speed_metor">0</span>
+                            </dev>
+                        </dev>
+                    </label>
                     <input oninput="onSeek_bar();" type="range" id="speed" min="0" max="100" value="0" step="2">
                     <button type="button" id="imgbutton"><img src="{% static 'media/sensor2.png' %}" id="sensor" draggable="false"></button>
                 </div>
